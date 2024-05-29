@@ -1,0 +1,58 @@
+package Zoho_100;
+import java.util.Stack;
+
+public class DecodeString {
+	public static void main(String[] args)
+	{
+		String s = "a2[bc4[ad]y]";
+		System.out.println(s);
+		System.out.println("The Decode String is : " + decodeString(s));
+	}
+	static String decodeString(String s)
+	{
+		Stack<Integer> numStack = new Stack<>();
+		Stack<String> stringStack = new Stack<>();
+		int k = 0;
+		
+		for(char c : s.toCharArray())
+		{
+			if(Character.isDigit(c))
+			{
+				k = (k*10) + (c - '0');
+				continue;
+			}
+			if(c == '[')
+			{
+				numStack.push(k);
+				k = 0;
+				stringStack.push(String.valueOf(c));
+				continue;
+			}
+			if(c != ']')
+			{
+				stringStack.push(String.valueOf(c));
+				continue;
+			}
+			
+			StringBuilder temp = new StringBuilder();
+			while(!stringStack.peek().equals("["))
+				temp.insert(0, stringStack.pop());
+			
+			stringStack.pop();
+			
+			StringBuilder replacement = new StringBuilder();
+			int count = numStack.pop();
+			for(int i = 0; i < count; i++) 
+				replacement.append(temp);
+			
+			stringStack.push(replacement.toString());
+			
+		}
+		StringBuilder result = new StringBuilder();
+		while(!stringStack.isEmpty())
+			result.insert(0, stringStack.pop());
+		
+		
+		return result.toString();
+	}
+}
